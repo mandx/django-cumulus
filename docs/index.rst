@@ -240,6 +240,7 @@ Below are the default settings::
         'GZIP_CONTENT_TYPES': [],
         'USE_PYRAX': True,
         'PYRAX_IDENTITY_TYPE': None,
+        'TEMP_URL_SECONDS': 3600,
     }
 
 
@@ -406,6 +407,15 @@ there are two types available: *rackspace* and *keystone*.
 You **can** specify it through cumulus settings and if you don't, you **must**
 do it through other means (like environment variables or configuration files,
 see Pyrax documentation for more details).
+
+
+TEMP_URL_SECONDS
+----------------
+
+If the container has no public URL configured (Cumulus can't figure it out)
+Cumulus will generate a temporary ``GET`` URL for the file when the ``file.url``
+property is accessed. The setting ``TEMP_URL_SECONDS`` controls for how long
+the generated URL will be valid
 
 
 Requirements

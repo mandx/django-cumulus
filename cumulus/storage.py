@@ -185,7 +185,14 @@ class CumulusStorage(Auth, Storage):
         Returns an absolute URL where the content of each file can be
         accessed directly by a web browser.
         """
-        return u"{0}/{1}".format(self.container_url, name)
+        container_url = self.container_url
+        if container_url:
+            return u"{0}/{1}".format(container_url, name)
+        return self.connection.get_temp_url(
+            self.container_name,
+            name,
+            CUMULUS["TEMP_URL_SECONDS"],
+        )
 
     def listdir(self, path):
         """

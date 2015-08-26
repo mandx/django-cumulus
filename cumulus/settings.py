@@ -28,7 +28,8 @@ CUMULUS = {
     "GZIP_CONTENT_TYPES": [],
     "USE_PYRAX": True,
     "PYRAX_IDENTITY_TYPE": 'rackspace',
-    "FILE_TTL": None
+    "FILE_TTL": None,
+    "TEMP_URL_SECONDS": 3600,
 }
 
 if hasattr(settings, "CUMULUS"):
