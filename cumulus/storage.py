@@ -7,7 +7,10 @@ from gzip import GzipFile
 try:
     from cStringIO import StringIO
 except ImportError:
-    from StringIO import StringIO
+    try:
+        from StringIO import StringIO
+    except ImportError:
+        from io import StringIO
 
 from django.core.files.storage import Storage
 from django.core.files.base import File, ContentFile
@@ -125,7 +128,7 @@ class CumulusStorage(Auth, Storage):
                 content = get_gzipped_contents(content)
             self.connection.store_object(container=self.container_name,
                                          obj_name=name,
-                                         data=content.read(),
+                                         data=content,
                                          content_type=content_type,
                                          content_encoding=headers.get("Content-Encoding", None),
                                          ttl=self.file_ttl,
@@ -258,8 +261,7 @@ class ThreadSafeCumulusStorage(CumulusStorage):
 
     def _get_connection(self):
         if not hasattr(self.local_cache, "connection"):
-            super(ThreadSafeSwiftclientStorage, self)._get_connection()
-            self.local_cache.connection = connection
+            self.local_cache.connection = super(ThreadSafeCumulusStorage, self)._get_connection()
 
         return self.local_cache.connection
 
@@ -267,8 +269,7 @@ class ThreadSafeCumulusStorage(CumulusStorage):
 
     def _get_container(self):
         if not hasattr(self.local_cache, "container"):
-            container = self.connection.create_container(self.container_name)
-            self.local_cache.container = container
+            self.local_cache.container = self.connection.create_container(self.container_name)
 
         return self.local_cache.container
 
